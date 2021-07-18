@@ -1,7 +1,7 @@
 remove(list = ls())
 
 
-setwd('C:/Users/edoar/Desktop/NAPDE/Project/Code')
+setwd('C:/Users/edoar/Desktop/NAPDE/Project/Code/SUITHER-calibration')
 
 npop <- 60317000
 
