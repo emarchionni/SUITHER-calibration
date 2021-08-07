@@ -26,8 +26,8 @@ colnames(Y) <- c('date',
                  'isolated',
                  'hospitalized',
                  'threatened',
-                 'extinct',
-                 'undetected')
+                 'undetected',
+                 'extinct')
 Y <- data.frame(Y)
 
 Y$date <- italy_peak$data
