@@ -38,28 +38,6 @@ dirmultAR_mcmc <- function(Y, R=10000, burnin=1000, tin=10, Tau=matrix(0.1,7,7),
                            ORmin=matrix(NA,7,7), ORmax=matrix(NA,7,7)){
   
 
-# WITH DIRICHLET-MULTINOMIAL MODEL with dispersion parameters
-
-# Estimate multinomial AR model for COVID-19 data by an MCMC algorithm
-# Categories must be ordered as:
-# "susceptible", "recovered", "isolated",  "hospitalized", "threatened", "undetected", "extinct" 
-
-# INPUT:
-# Y      = matrix (TT x 6) of observed daily frequencies for the 6 categories ordered from suscptibles to deceased
-# burnin = number of iterations of burning in
-# R      = number of iterations after burning in
-# TODO si2BE  = variance of regression parameters (default NULL)
-# TODO mBE    
-# TODO VBE
-# Tau    = matrix of standard deviations for each proposal
-# mra    = maximum variation of each cell in updating the tables
-# tint   = times of interventions (NA for no intervention) 
-# output = TRUE for providing all estimated matrices at each MCMC iteration
-# tin    = store results each tin iterations
-# ORmin  = matrix of lower limits of OR
-# ORmax = matrix of upper limits of OR
-# conbe  = contraint 2° order coefficients in the polinomials to be non-positive
-
 Y <- as.matrix(Y)
 TT <- nrow(Y) # total number of time instants
 categories <- colnames(Y)
