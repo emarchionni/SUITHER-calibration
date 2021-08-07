@@ -1,9 +1,41 @@
 library(pbmcapply)
 
-dirmultAR_mcmc <- function(Y,R=10000,burnin=1000,Tau=matrix(0.1,7,7),
-                           mra=10, si2BE = 100, tint=NULL,disp=TRUE,tin=10,
-                           ORmin=matrix(NA,7,7),ORmax=matrix(NA,7,7),
-                           degree=2){
+
+#'
+#' MCMC for Dirichlet-multinomial AR model
+#' TT total time
+#' 
+#' Categories must be ordered as
+#' "susceptible", "recovered", "isolated",  "hospitalized", "threatened", "undetected", "extinct" 
+#' 
+#' @param Y matrix (TT x 7) of observed daily frequencies (TT = #days) for the 6 categories ordered from suscptibles to deceased
+#' @param R number of iterations after burning in
+#' @param burnin number of iteration of burning in
+#' @param tin tinning step (store result each tinning iteration)
+#' @param Tau matrix of standard deviations for each proposal of regression parameters (beta's)
+#' @param mra maximum variation of each cell in updating the tables
+#' @param si2BE variance of regression parameters (beta's)
+#' @param degree maximum degree of time polynomial
+#' @param tint times of intervention (dummies covariates)
+#' @param disp display tables during estimation
+#' @param ORmin matrix of lower limits of OR
+#' @param ORmax matrix of upper limits of OR
+#' 
+#' 
+#' 
+#' @return a list with the following components:
+#'         TTAB array of transition tables for each MCMC iteration
+#'         BBE array of regression coefficients for each MCMC iteration
+#'         PPE array of transition probabilities for each MCMC iteration
+#'         acctab overall acceptance rate for tables
+#'         accbe overal acceptance rate for regression parameters
+#'         Accbe acceptance rate for each regression parameter vector
+#'         
+#'         
+
+dirmultAR_mcmc <- function(Y, R=10000, burnin=1000, tin=10, Tau=matrix(0.1,7,7),
+                           mra=10, si2BE = 100, degree=2, tint=NULL, disp=FALSE,
+                           ORmin=matrix(NA,7,7), ORmax=matrix(NA,7,7)){
   
 
 # WITH DIRICHLET-MULTINOMIAL MODEL with dispersion parameters
