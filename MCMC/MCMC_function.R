@@ -8,7 +8,7 @@ library(pbmcapply)
 #' Categories must be ordered as
 #' "susceptible", "recovered", "isolated",  "hospitalized", "threatened", "undetected", "extinct" 
 #' 
-#' @param Y matrix (TT x 7) of observed daily frequencies (TT = #days) for the 6 categories ordered from suscptibles to deceased
+#' @param Y matrix (TT x 7) of observed daily frequencies (TT = #days) for the 6 categories ordered from susceptibles to deceased
 #' @param R number of iterations after burning in
 #' @param burnin number of iteration of burning in
 #' @param tin tinning step (store result each tinning iteration)

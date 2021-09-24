@@ -66,7 +66,7 @@ CFR <- build_CFR(recovered.D = italy_peak2$dimessi_guariti,
                  time = italy_peak2$data,
                  dt = 28)
 
-### undetected
+### undetected 
 source('Build_undetected.R')
 
 undetected <- build_undetected(isolated = Y$isolated,
@@ -85,9 +85,13 @@ Y$susceptible <- npop - rowSums(Y[,3:8])
 View(Y)
 
 
+#### Preliminary plots ####
+x11()
+par(mfrow=c(4,2))
+titles <- colnames(Y)
+for (i in 2:8) plot(Y[,i], xlab = 'Time', ylab = '', main = titles[i], type = 'p', col = 'grey', pch = 19)
 
 
-
-
-
+#### MCMC ####
+source('MCMC/MCMC_function.R')
 
