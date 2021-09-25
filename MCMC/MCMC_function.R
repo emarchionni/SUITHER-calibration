@@ -215,18 +215,6 @@ OR = LA
       print("last table")
       print(cbind(TAB[,,TT],NA,round(Y[TT-1,]*PP[,,TT])))
       cat("\n")
-      if(r>=tin){
-        print("mean of chi2 and posterior p-value")
-        print(c(mean(CHI2[1:r1]),mean(CHI2_SIM[1:r1])))
-        print(mean(CHI2_SIM[1:r1]>CHI2[1:r1]))
-        if(!is.null(Y_new)){
-          print("mean of chi2 and posterior p-value (forecast)")
-          Tmp = NULL
-          for(t in 1:tahead1) Tmp = rbind(Tmp,c(mean(CHI2_new[1:r1,t]),mean(CHI2_SIM_new[1:r1,t]),
-                                                mean(CHI2_SIM_new[1:r1,t]>CHI2_new[1:r1,t])))
-          print(Tmp)
-        }
-      }
     }
   }
   
