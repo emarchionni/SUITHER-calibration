@@ -1,5 +1,5 @@
 library(pbmcapply)
-library(spines)
+library(splines)
 library(extraDistr)
 
 
