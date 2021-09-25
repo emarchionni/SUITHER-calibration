@@ -123,9 +123,7 @@ out_no_ORmax <- dirmultAR_mcmc(Y[,2:8],
 
 
 
-dirmultAR_mcmc <- function(Y, R=10000, burnin=1000, tin=10, Tau=matrix(0.1,7,7),
-                           mra=10, si2BE = 100, degree=2, tint=NULL, disp=FALSE,
-                           ORmin=matrix(NA,7,7), ORmax=matrix(NA,7,7))
+
 
 save(out_no_ORmax, file = 'out_no_ORmax.RData')
 
