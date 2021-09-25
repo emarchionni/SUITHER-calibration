@@ -95,3 +95,50 @@ for (i in 2:8) plot(Y[,i], xlab = 'Time', ylab = '', main = titles[i], type = 'p
 #### MCMC ####
 source('MCMC/MCMC_function.R')
 
+### set constraints
+
+ORmax <- matrix(c(NA, 10^-7, 0.001, 0.0001, 10^-6, NA, 10^-7,
+                  NA, NA,    0.001, 0.0001, 10^-6, NA, 10^-7,
+                  NA, 0.1,      NA,    0.1, 10^-5, NA, 10^-6,
+                  NA, 0.1,     0.1,     NA,   0.1, NA,  0.01,
+                  NA, 10^-7, 10^-7,   0.25,    NA, NA,  0.25,
+                  NA, NA,       NA,     NA,    NA, NA,   NA,
+                  NA, NA,       NA,     NA,    NA, NA,   NA),
+                  7,byrow=TRUE)
+
+### burnin' and iterations
+burnin <- 100*10^3; R <- 500*10^3
+
+### dummies
+dummies <- c(10, 54, 72, 83, 92, 97, 107, 114, 126)
+
+### posterior inference
+# no ORmax
+out_no_ORmax <- dirmultAR_mcmc(Y[,2:8], 
+                      R = R,
+                      burnin = burnin,
+                      mra = 50,
+                      degree = 3,
+                      tint = dummies)
+
+
+
+dirmultAR_mcmc <- function(Y, R=10000, burnin=1000, tin=10, Tau=matrix(0.1,7,7),
+                           mra=10, si2BE = 100, degree=2, tint=NULL, disp=FALSE,
+                           ORmin=matrix(NA,7,7), ORmax=matrix(NA,7,7))
+
+save(out_no_ORmax, file = 'out_no_ORmax.RData')
+
+
+# ORmax
+out_ORmax <- dirmultAR_mcmc(Y[,2:8], 
+                               R = R,
+                               burnin = burnin,
+                               mra = 50,
+                               degree = 3,
+                               tint = dummies,
+                               ORmax = ORmax)
+
+save(out_ORmax, file = 'out_ORmax.RData')
+
+
