@@ -113,7 +113,7 @@ burnin <- 100*10^3; R <- 500*10^3
 dummies <- c(10, 54, 72, 83, 92, 97, 107, 114, 126)
 
 ### posterior inference
-# no ORmax
+# no ORmax (model 7, Bartolucci et al. 2021)
 out_no_ORmax <- dirmultAR_mcmc(Y[,2:8], 
                       R = R,
                       burnin = burnin,
@@ -128,7 +128,7 @@ out_no_ORmax <- dirmultAR_mcmc(Y[,2:8],
 save(out_no_ORmax, file = 'out_no_ORmax.RData')
 
 
-# ORmax
+# ORmax (model 8, Bartolucci et al. 2021)
 out_ORmax <- dirmultAR_mcmc(Y[,2:8], 
                                R = R,
                                burnin = burnin,
