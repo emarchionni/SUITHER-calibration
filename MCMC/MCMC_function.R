@@ -44,11 +44,8 @@ Y <- as.matrix(Y)
 TT <- nrow(Y) # total number of time instants
 categories <- colnames(Y)
 ldnorm <- function(x1,x2,si2=1) -sum(x1^2-x2^2)/(2*si2)
-if(is.null(si2BE)){
-  si2 = 100
-}else{
-  si2 = si2BE
-}
+
+
 
 # initial tables
 TAB <- array(0,c(7,7,TT))
@@ -82,7 +79,7 @@ BE[2:7,1,] = BE[7,2:6,] = NA
 for(h in 1:38){ # iter over admissible couples
   i = Ind[h,1]; j = Ind[h,2]
   if(j!=i){
-    if(!is.null(mBE)) BE[i,j,] = mBE[i,j,]
+    # if(!is.null(mBE)) BE[i,j,] = mBE[i,j,]
     if(!is.na(ORmin[i,j]) & is.na(ORmax[i,j])) BE[i,j,1] = max(BE[i,j,1],log(ORmin[i,j]))
     if(is.na(ORmin[i,j]) & !is.na(ORmax[i,j])) BE[i,j,1] = min(BE[i,j,1],log(ORmax[i,j]))
     if(!is.na(ORmin[i,j]) & !is.na(ORmax[i,j])){
@@ -172,7 +169,7 @@ OR = LA
         if(!is.na(ORmax[i,j1])) if(any(ORS[i,j1,2:TT]>ORmax[i,j1])) check = FALSE
       }
       if(check){ 
-        tmp = ldnorm1(BES[i,j,],BE[i,j,],si2)
+        tmp = ldnorm1(BES[i,j,],BE[i,j,],si2BE)
         
         for(t in 2:TT){
           La = LA[,,t]; Las = LAS[,,t]
