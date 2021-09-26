@@ -110,7 +110,7 @@ ORmax <- matrix(c(NA, 10^-7, 0.001, 0.0001, 10^-6, NA, 10^-7,
 burnin <- 100*10^3; R <- 500*10^3
 
 ### dummies
-dummies <- c(10, 54, 72, 83, 92, 97, 107, 114, 126)
+dummies <- c(41, 54, 72, 83, 92, 97, 107, 114, 126)
 
 ### posterior inference
 # no ORmax
