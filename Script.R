@@ -108,7 +108,7 @@ ORmax <- matrix(c(NA, 10^-7, 0.001, 0.0001, 10^-6, NA, 10^-7,
                   7,byrow=TRUE)
 
 ### burnin' and iterations
-burnin <- 100*10^3; R <- 500*10^3
+burnin <- 5*10^3; R <- 50*10^3
 
 ### dummies
 dummies <- c(41, 54, 72, 83, 92, 97, 107, 114, 126)
@@ -126,7 +126,7 @@ out_no_ORmax <- dirmultAR_mcmc(Y[,2:8],
 
 
 
-save(out_no_ORmax, file = 'out_no_ORmax.RData')
+save(out_no_ORmax, file = 'model_7.RData')
 
 
 # ORmax (model 8, Bartolucci et al. 2021)
@@ -138,6 +138,6 @@ out_ORmax <- dirmultAR_mcmc(Y[,2:8],
                                tint = dummies,
                                ORmax = ORmax)
 
-save(out_ORmax, file = 'out_ORmax.RData')
+save(out_ORmax, file = 'model_8.RData')
 
 

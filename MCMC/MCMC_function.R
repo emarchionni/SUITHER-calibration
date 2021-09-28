@@ -43,7 +43,7 @@ dirmultAR_mcmc <- function(Y, R=10000, burnin=1000, tin=10, Tau=matrix(0.1,7,7),
 Y <- as.matrix(Y)
 TT <- nrow(Y) # total number of time instants
 categories <- colnames(Y)
-ldnorm <- function(x1,x2,si2=1) -sum(x1^2-x2^2)/(2*si2)
+ldnorm1 <- function(x1,x2,si2=1) -sum(x1^2-x2^2)/(2*si2)
 
 
 
@@ -203,9 +203,9 @@ OR = LA
   
   #### STEP 2: display output
   if(r%%250==0){
-    tt = proc.time()[3]; names(tt) = NULL
-    print(c(iteration=r,acc_tab=acctab/it,acc_be=accbe/it,time100=100*(tt-t0)/it))
     if(disp){
+      tt = proc.time()[3]; names(tt) = NULL
+      print(c(iteration=r,acc_tab=acctab/it,acc_be=accbe/it,time100=100*(tt-t0)/it))
       print(Accbe)
       cat("\n")
       print("last matrix of OR")
