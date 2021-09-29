@@ -52,7 +52,7 @@ TAB <- array(0,c(7,7,TT))
 TAB[,,1] <- NA
 for(t in 2:TT){ 
   mi <- round(pmin(Y[t,],Y[t-1,])*c(1,0.9,0.9,0.9,0.9,0.9,1))
-  rtot <- Y[t-1,]-mi
+  rtot <- Y[t-1,]-mi                         
   ctot <- Y[t,]-mi
   TAB[,,t] <- diag(mi)+r2dtable(1,rtot,ctot)[[1]] # generate 2-way tables with given margins
 }
@@ -66,7 +66,7 @@ if(is.null(tint)){
 }else{
   XX <- cbind(1,bs(1:(TT-1),degree=degree,knots = tint-1))
 }
-XXC <- XX
+#XXC <- XX
 
 
 
@@ -74,9 +74,10 @@ XXC <- XX
 mTAB = apply(TAB[,,2:TT],c(1,2),mean) # matrix of the element-wise mean of the matrices
 nbe = degree+1+length(tint)
 BE = array(0,c(7,7,nbe)) # regression parameters
-Ind = rbind(cbind(1,1:7),cbind(2,2:7),cbind(3,2:7),cbind(4,2:7),cbind(5,2:7),cbind(6,2:7),c(7,7))
-BE[2:7,1,] = BE[7,2:6,] = NA
-for(h in 1:38){ # iter over admissible couples
+Ind = rbind(cbind(1,c(1,6)),cbind(2,2),cbind(3,c(2:4,7)),cbind(4,c(2,4,5)),cbind(5,c(4,5,7)),cbind(6,c(2,3,6)),c(7,7))
+BE[1,c(2:5,7),] = BE[2,c(1,3:7),] = BE[3,c(1,5,6),] = 
+  BE[4,c(1,3,6,7),] = BE[5,c(1:3,6),] = BE[6,c(1,4,5,7),] = BE[7,1:6,] = NA # nonadmissible transitions
+for(h in 1:17){ # iter over admissible couples
   i = Ind[h,1]; j = Ind[h,2]
   if(j!=i){
     # if(!is.null(mBE)) BE[i,j,] = mBE[i,j,]
@@ -89,7 +90,7 @@ for(h in 1:38){ # iter over admissible couples
 }
 LA = PP = array(0,c(7,7,TT))
 LA[,,1] = PP[,,1] = NA
-for(h in 1:38) LA[Ind[h,1],Ind[h,2],2:TT] = exp(XX%*%BE[Ind[h,1],Ind[h,2],]) # compute num transision probs
+for(h in 1:17) LA[Ind[h,1],Ind[h,2],2:TT] = exp(XX%*%BE[Ind[h,1],Ind[h,2],]) # compute num transision probs
 for(t in 2:TT) PP[,,t] = (1/rowSums(LA[,,t]))*LA[,,t] # compute transition probs
 
 # LAC = array(0,c(7,7,TT))
@@ -101,11 +102,14 @@ OR = LA
 
   acctab = accbe = accnu = 0
   Accbe = matrix(0,7,7)
-  Accbe[2:6,1] = NA
+  Accbe[1,c(2:5,7)] = Accbe[2,c(1,3:7)] = Accbe[3,c(1,5,6)] = 
+    Accbe[4,c(1,3,6,7)] = Accbe[5,c(1:3,6)] = Accbe[6,c(1,4,5,7)] = Accbe[7,1:6] = NA
+  # Accbe <- Accbe[-c(2,7),] #TODO check how it is more convenient
   TTAB = array(as.integer(0),c(7,7,TT,R/tin))
   TTAB[,,,1] = NA
   BBE = array(0,c(7,7,nbe,R/tin))
-  BBE[2:7,1,,] = BBE[7,2:6,,] = NA
+  BBE[1,c(2:5,7),,] = BBE[2,c(1,3:7),,] = BBE[3,c(1,5,6),,] = 
+    BBE[4,c(1,3,6,7),,] = BBE[5,c(1:3,6),,] = BBE[6,c(1,4,5,7),,] = BBE[7,1:6,,] = NA
   PPP = array(0,c(7,7,TT,R/tin))
   PPP[,,,1] = NA
   it = 0
@@ -120,6 +124,7 @@ OR = LA
   #### STEP 1: update tables
   for(t in 2:TT){
     La = LA[,,t]; P = PP[,,t]
+    #TODO from here
     for(it1 in 1){
       tmp = sample(1:6,2); i1 = min(tmp); i2 = max(tmp)
       tmp = sample(2:7,2); j1 = min(tmp); j2 = max(tmp)
@@ -153,7 +158,7 @@ OR = LA
   #### STEP 2: update beta's
   for(h in 1:38){
     i = Ind[h,1]; j = Ind[h,2]
-    if(i<7){
+    if(i<7){ #TODO i!=7 and i!=2
       ind = Ind[Ind[,1]==i,2]
       BES = BE; LAS = LA; PPS = PP; ORS = OR # BES : current proposed beta's / BE : previous beta's
       # LACS = LAC; ORCS = ORC;
