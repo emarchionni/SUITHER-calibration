@@ -124,11 +124,54 @@ OR = LA
   #### STEP 1: update tables
   for(t in 2:TT){
     La = LA[,,t]; P = PP[,,t]
-    #TODO from here
     for(it1 in 1){
-      tmp = sample(1:6,2); i1 = min(tmp); i2 = max(tmp)
-      tmp = sample(2:7,2); j1 = min(tmp); j2 = max(tmp)
+      tmp1 = sample(c(3,4,5,6), 1)
+      
+      if(tmp1==3)
+      {
+        # rows
+        tmp2 = sample(c(4,5,6),1)
+        tmp = c(tmp1,tmp2)
+        i1 = min(tmp); i2 = max(tmp)
+        # columns
+        if(tmp2==4) {
+          j1 = 2; j2 = 4;
+        } else if(tmp2==5) {
+          j1 = 4; j2 = 7;
+        } else { 
+          j1 = 2; j2 = 3;
+        }
+        
+      } else if(tmp1==4){
+        # rows
+        tmp2 = sample(c(3,5),1)
+        tmp = c(tmp1,tmp2)
+        i1 = min(tmp); i2 = max(tmp)
+        # columns
+        if(tmp2==3){
+          j1 = 2; j2 = 4;
+        } else {
+          j1 = 4; j2 = 5;
+        }
+        
+      } else if(tmp1==5){
+        # rows
+        tmp2 = sample(c(3,4),1)
+        tmp = c(tmp1,tmp2)
+        i1 = min(tmp); i2 = max(tmp)
+        # columns
+        if(tmp2==3){
+          j1 = 4; j2 = 7;
+        } else {
+          j1 = 4; j2 = 5;
+        }
+        
+      } else {
+        i1 = 3; i2 = 6;
+        j1 = 2; j2 = 3;
+      }
       ra = sample(seqra,1)
+      #TODO from here
       Tab = Tabs = TAB[,,t] # Tabs : current proposed table / Tab : previous table
       Tabs[i1,j1] = Tab[i1,j1]+ra
       Tabs[i1,j2] = Tab[i1,j2]-ra
