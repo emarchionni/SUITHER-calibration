@@ -125,10 +125,10 @@ OR = LA
   for(t in 2:TT){
     La = LA[,,t]; P = PP[,,t]
     for(it1 in 1){
-      tmp1 = sample(c(3,4,5,6), 1)
       
-      if(tmp1==3)
-      {
+      # select compatible rows and columns
+      tmp1 = sample(c(3,4,5,6), 1)
+      if(tmp1==3){
         # rows
         tmp2 = sample(c(4,5,6),1)
         tmp = c(tmp1,tmp2)
@@ -170,7 +170,10 @@ OR = LA
         i1 = 3; i2 = 6;
         j1 = 2; j2 = 3;
       }
+      
+      # sample an increment value
       ra = sample(seqra,1)
+      
       #TODO from here
       Tab = Tabs = TAB[,,t] # Tabs : current proposed table / Tab : previous table
       Tabs[i1,j1] = Tab[i1,j1]+ra
@@ -199,13 +202,14 @@ OR = LA
   }
   
   #### STEP 2: update beta's
-  for(h in 1:38){
+  for(h in 1:17){
+    # TODO from here
     i = Ind[h,1]; j = Ind[h,2]
-    if(i<7){ #TODO i!=7 and i!=2
+    if(i<7 && i!=2){ 
       ind = Ind[Ind[,1]==i,2]
       BES = BE; LAS = LA; PPS = PP; ORS = OR # BES : current proposed beta's / BE : previous beta's
       # LACS = LAC; ORCS = ORC;
-      BES[i,j,] = BE[i,j,]+rnorm(nbe,0,Tau[i,j])
+      BES[i,j,] = BE[i,j,]+rnorm(nbe,0,Tau[i,j]) # sample new beta from proposal distribution
       LAS[i,j,2:TT] = exp(XX%*%BES[i,j,])
       # LACS[i,j,2:(TT+tahead)] = exp(XXC%*%BES[i,j,])
       for(t in 2:TT) PPS[i,,t] = LAS[i,,t]/sum(LAS[i,,t])
@@ -233,7 +237,7 @@ OR = LA
         }
         if(runif(1)<=al){
           BE = BES; LA = LAS; OR = ORS; PP = PPS
-          accbe = accbe + 1/37
+          accbe = accbe + 1/17
           Accbe[i,j] = Accbe[i,j]+1
         }
       }
