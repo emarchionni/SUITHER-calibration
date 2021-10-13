@@ -50,26 +50,62 @@ ldnorm1 <- function(x1,x2,si2=1) -sum(x1^2-x2^2)/(2*si2)
 # initial tables
 TAB <- array(0,c(7,7,TT))
 TAB[,,1] <- NA
-for(t in 2:TT){ 
-  mi <- round(pmin(Y[t,],Y[t-1,])*c(1,0.9,0.9,0.9,0.9,0.9,1))
-  rtot <- Y[t-1,]-mi                         
-  ctot <- Y[t,]-mi
-  TAB[,,t] <- diag(mi)+r2dtable(1,rtot,ctot)[[1]] # generate 2-way tables with given margins
+for(t in 2:TT){
+  ### Set constrained values in contingency tables
+  TAB[1,1,t] <- Y[t, 1]
+  TAB[1,6,t] <- Y[t-1, 1] - TAB[1,1,t]
+  TAB[6,6,t] <- Y[t, 6] - TAB[1,6,t]
+  TAB[2,2,t] <- Y[t-1, 2]
+  TAB[7,7,t] <- Y[t-1, 7]
+  
+  # new margins after subtraction already set values
+  row_margin <- Y[t-1,] - apply(TAB[,,t], 1, sum) 
+  col_margin <- Y[t,] - apply(TAB[,,t], 2, sum) 
+  
+  
+  
+  ### Generate new tables
+  mi <- round(pmin(Y[t,],Y[t-1,])*c(0,0,0.9,0.9,0.9,0,0))
+  rtot <- row_margin - mi
+  ctot <- col_margin - mi
+  TAB[,,t] <- diag(mi) + TAB[,,t]
+  
+  # row 3
+  TAB[3,2,t] <- sample(1:(rtot[3]-1), size = 1); rtot[3] <- rtot[3] - TAB[3,2,t]
+  TAB[3,4,t] <- sample(1:(rtot[3]-1), size = 1); rtot[3] <- rtot[3] - TAB[3,4,t]
+  TAB[3,7,t] <- rtot[3]
+  
+  # row 4
+  TAB[4,2,t] <- sample(1:rtot[4], size = 1); rtot[4] <- rtot[4] - TAB[4,2,t]
+  TAB[4,5,t] <- rtot[4]
+  
+  # row 5
+  TAB[5,4,t] <- sample(1:rtot[5], size = 1); rtot[5] <- rtot[5] - TAB[5,4,t]
+  TAB[5,7,t] <- rtot[5]
+  
+  #row 6
+  TAB[6,2,t] <- sample(1:rtot[6], size = 1); rtot[6] <- rtot[6] - TAB[6,2,t]
+  TAB[6,3,t] <- rtot[6]
+  
+  
+  
 }
+
+#############
 
 
 
 
 # design matrices
 if(is.null(tint)){
-  XX<- cbind(1,bs(1:(TT-1),degree=degree))
+  XX <- cbind(1,bs(1:(TT-1),degree=degree))
 }else{
   XX <- cbind(1,bs(1:(TT-1),degree=degree,knots = tint-1))
 }
 #XXC <- XX
 
 
-
+#TODO
 # initial values of the parameters and multinomial probabilities
 mTAB = apply(TAB[,,2:TT],c(1,2),mean) # matrix of the element-wise mean of the matrices
 nbe = degree+1+length(tint)
@@ -88,9 +124,10 @@ for(h in 1:17){ # iter over admissible couples
     }
   }
 }
+
 LA = PP = array(0,c(7,7,TT))
 LA[,,1] = PP[,,1] = NA
-for(h in 1:17) LA[Ind[h,1],Ind[h,2],2:TT] = exp(XX%*%BE[Ind[h,1],Ind[h,2],]) # compute num transision probs
+for(h in 1:17) LA[Ind[h,1],Ind[h,2],2:TT] = exp(XX%*%BE[Ind[h,1],Ind[h,2],]) # compute numerator transision probs
 for(t in 2:TT) PP[,,t] = (1/rowSums(LA[,,t]))*LA[,,t] # compute transition probs
 
 # LAC = array(0,c(7,7,TT))
@@ -205,15 +242,16 @@ OR = LA
   for(h in 1:17){
     # TODO from here
     i = Ind[h,1]; j = Ind[h,2]
-    if(i<7 && i!=2){ 
+    if(i!=7 && i!=2){ 
       ind = Ind[Ind[,1]==i,2]
       BES = BE; LAS = LA; PPS = PP; ORS = OR # BES : current proposed beta's / BE : previous beta's
       # LACS = LAC; ORCS = ORC;
-      BES[i,j,] = BE[i,j,]+rnorm(nbe,0,Tau[i,j]) # sample new beta from proposal distribution
+      BES[i,j,] = BE[i,j,]+rnorm(nbe,0,Tau[i,j]) # sample new beta from i to j from proposal distribution
       LAS[i,j,2:TT] = exp(XX%*%BES[i,j,])
       # LACS[i,j,2:(TT+tahead)] = exp(XXC%*%BES[i,j,])
-      for(t in 2:TT) PPS[i,,t] = LAS[i,,t]/sum(LAS[i,,t])
-      for(t in 2:TT) ORS[i,,t] = LAS[i,,t]/LAS[i,i,t]
+      for(t in 2:TT) PPS[i,,t] = LAS[i,,t]/sum(LAS[i,,t]) # new prob's from i to all categories for each time
+      for(t in 2:TT) ORS[i,,t] = LAS[i,,t]/LAS[i,i,t] # ODD RATIO: at time t 
+                                                      # prob to go from i to j/prob to stay in j
       check = TRUE
       # if(conbe) if(BES[i,j,3]>0) check=FALSE
       for(j1 in ind) if(j1!=i){
