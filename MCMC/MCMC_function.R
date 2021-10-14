@@ -70,30 +70,45 @@ for(t in 2:TT){
   ctot <- col_margin - mi
   TAB[,,t] <- diag(mi) + TAB[,,t]
   
+  
+  # subtable rows: 3,6; coloumns: 2,3
+  ctotsub <- ctot[2:3]; rtotsub <- c(sum(ctotsub)-rtot[6],rtot[6])
+  TAB[c(3,6),c(2,3),t] <- TAB[c(3,6),c(2,3),t] + r2dtable(1,rtotsub,ctotsub)[[1]]
+  ctot[c(2,3)] <- ctot[c(2,3)] - ctotsub
+  rtot[c(3,6)] <- rtot[c(3,6)] - rtotsub
+  
+  # subtable rows: 3,4; coloums: 2,4
+  ctotsub <- ctot[c(2,4)]; rtotsub <- c(sum(ctotsub)-rtot[6],rtot[6])
+  
+  
   # row 3
-  TAB[3,2,t] <- sample(1:(rtot[3]-1), size = 1); rtot[3] <- rtot[3] - TAB[3,2,t]
-  TAB[3,4,t] <- sample(1:(rtot[3]-1), size = 1); rtot[3] <- rtot[3] - TAB[3,4,t]
+  maxel2 <- min(rtot[3],col[2])
+  TAB[3,2,t] <- sample(1:(rtot[3]-1), size = 1); rtot[3] <- rtot[3] - TAB[3,2,t] 
+  TAB[3,4,t] <- sample(1:(rtot[3]), size = 1); rtot[3] <- rtot[3] - TAB[3,4,t]   
   TAB[3,7,t] <- rtot[3]
   
-  # row 4
-  TAB[4,2,t] <- sample(1:rtot[4], size = 1); rtot[4] <- rtot[4] - TAB[4,2,t]
-  TAB[4,5,t] <- rtot[4]
+  ctot[2] <- ctot[2] - TAB[3,2,t]
+  ctot[4] <- ctot[4] - TAB[3,4,t]
+  ctot[7] <- ctot[7] - TAB[3,7,t]
   
-  # row 5
-  TAB[5,4,t] <- sample(1:rtot[5], size = 1); rtot[5] <- rtot[5] - TAB[5,4,t]
-  TAB[5,7,t] <- rtot[5]
+  # row 4 (coerced)
+  TAB[4,5,t] <- ctot[5]
+  TAB[4,2,t] <- rtot[4] - TAB[4,5,t]
   
-  #row 6
-  TAB[6,2,t] <- sample(1:rtot[6], size = 1); rtot[6] <- rtot[6] - TAB[6,2,t]
-  TAB[6,3,t] <- rtot[6]
+  
+  # row 5 (coerced)
+  TAB[5,4,t] <- ctot[4]
+  TAB[5,7,t] <- ctot[7]
+  
+  #row 6 (coerced)
+  TAB[6,2,t] <- ctot[2]
+  TAB[6,3,t] <- ctot[3]
   
   
   
 }
 
-#############
-
-
+View(TAB[,,4])
 
 
 # design matrices
