@@ -11,13 +11,13 @@ check_permutation <- function(TAB, ctot, rtot, perm){
   {
     
     out <- col_filling(TAB = out$TAB,
-                       ctot = out$ctot,
-                       rtot = out$rtot,
+                       ctot = as.array(unlist(out$ctot)),
+                       rtot = as.array(unlist(out$rtot)),
                        j = j)
     
     if(is.logical(out)) return(FALSE);
     
-    TAB[,i] <- out$TAB[,i]
+    TAB[,j] <- out$TAB[,j]
   }
   
   return(TAB);
@@ -30,7 +30,10 @@ check_permutation <- function(TAB, ctot, rtot, perm){
 col_filling <- function(TAB, ctot, rtot, j){
   #'@param  j number of column
   
-  
+  ctot <- as.array(ctot)
+  rtot <- as.array(rtot)
+  TAB <- as.matrix(TAB)
+
   if(j == 2){
    
     # fill column 2 (rows: 3, 4, 6)

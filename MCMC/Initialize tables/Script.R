@@ -1,5 +1,7 @@
 setwd('C:/Users/edoar/Desktop/NAPDE/Project/Code/SUITHER-calibration/MCMC/Initialize tables')
 
+remove(list = ls()[1:15])
+Y <- Y[,-1]
 col <- c(2,3,4,5,7)
 perm <- gtools::permutations(n = length(col), r = length(col), v = col)
 
@@ -10,6 +12,7 @@ TT <- nrow(Y)
 # initial tables
 TAB <- array(0,c(7,7,TT))
 TAB[,,1] <- NA
+verify <- vector(mode = 'logical', length = TT)
 for (t in 2:TT) {
   
   ### Set constrained values in contingency tables
@@ -43,9 +46,12 @@ for (t in 2:TT) {
                                perm = perm[rperm,])
       
       if(!is.logical(tab)){
+        
         TAB[,,t] <- tab
         # print(paste('Time',t,'ok'))
         good_permutation <- TRUE
+        if(apply(TAB[,,t],1,sum) == Y[t-1,] & apply(TAB[,,t],2,sum) == Y[t,]) verify[t] <- T;
+        
       }
       
       if(rperm == totperm & !good_permutation) print(paste('Table at time', t, 'not initialized'));
@@ -56,5 +62,6 @@ for (t in 2:TT) {
   
 }
 
+save(TAB, file = 'initial_tables.RData')
 
 
