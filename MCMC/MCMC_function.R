@@ -1,7 +1,7 @@
 library(pbmcapply)
 library(splines)
 library(extraDistr)
-library(stats)
+
 
 
 #'
@@ -48,7 +48,8 @@ ldnorm1 <- function(x1,x2,si2=1) -sum(x1^2-x2^2)/(2*si2)
 
 
 
-# TODO: initialize tables
+# initilization tables
+load('MCMC/Initialization tables/initial_tables.RData')
 
 
 
@@ -61,7 +62,6 @@ if(is.null(tint)){
 #XXC <- XX
 
 
-#TODO
 # initial values of the parameters and multinomial probabilities
 mTAB = apply(TAB[,,2:TT],c(1,2),mean) # matrix of the element-wise mean of the matrices
 nbe = degree+1+length(tint)
@@ -117,8 +117,7 @@ OR = LA
   #### STEP 1: update tables
   for(t in 2:TT){
     La = LA[,,t]; P = PP[,,t]
-    for(it1 in 1){
-      
+    
       # select compatible rows and columns
       tmp1 = sample(c(3,4,5,6), 1)
       if(tmp1==3){
@@ -191,12 +190,11 @@ OR = LA
           acctab = acctab + 1/(1*(TT-1))
         }
       }
-    }
+    
   }
   
   #### STEP 2: update beta's
   for(h in 1:17){
-    # TODO from here
     i = Ind[h,1]; j = Ind[h,2]
     if(i!=7 && i!=2){ 
       ind = Ind[Ind[,1]==i,2]

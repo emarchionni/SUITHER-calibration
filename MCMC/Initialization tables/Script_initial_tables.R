@@ -1,3 +1,5 @@
+library(stats)
+
 setwd('C:/Users/edoar/Desktop/NAPDE/Project/Code/SUITHER-calibration/MCMC/Initialize tables')
 
 remove(list = ls()[1:15])
