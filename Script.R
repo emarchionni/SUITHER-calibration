@@ -2,8 +2,8 @@ library(coda)
 remove(list = ls())
 
 
-setwd('C:/Users/edoar/Desktop/NAPDE/Project/Code/SUITHER-calibration')
-# setwd("C:/Users/Utente/Desktop/NAPDE/Project/SUITHER-calibration")
+# setwd('C:/Users/edoar/Desktop/NAPDE/Project/Code/SUITHER-calibration')
+setwd("C:/Users/Utente/Desktop/NAPDE/Project/SUITHER-calibration")
 
 npop <- 60317000
 
@@ -109,13 +109,14 @@ ORmax <- matrix(c(NA, 10^-7, 0.001, 0.0001, 10^-6, NA, 10^-7,
                   7,byrow=TRUE)
 
 ### burnin' and iterations
-burnin <- 0.5*10^3; R <- 1*10^3; tinning <- 10
+burnin <- 200*10^3; R <- 1000*10^3; tinning <- 20
 
 ### dummies
 dummies <- c(41, 54, 72, 83, 92, 97, 107, 114, 126)
 
 ### posterior inference
 # no ORmax (model 7, Bartolucci et al. 2021)
+# BETTER FOR EXPLORATORY PURPOSES
 out_no_ORmax <- dirmultAR_mcmc(Y[,2:8], 
                       R = R,
                       burnin = burnin,
@@ -126,7 +127,7 @@ out_no_ORmax <- dirmultAR_mcmc(Y[,2:8],
 
 
 
-traceplot(as.mcmc(out_no_ORmax$PPP[4,2,4,]))
+ traceplot(as.mcmc(out_no_ORmax$PPP[4,2,4,]))
 
 
 save(out_no_ORmax, file = 'model_7.RData')
