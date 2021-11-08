@@ -109,6 +109,7 @@ ORmax <- matrix(c(NA, 10^-7, 0.001, 0.0001, 10^-6, NA, 10^-7,
                   7,byrow=TRUE)
 
 ### burnin' and iterations
+# TODO : remember number of iteration, burnin, tinnig set
 burnin <- 0.5*10^3; R <- 1*10^3; tinning <- 10
 
 ### dummies
