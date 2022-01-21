@@ -1,6 +1,6 @@
 library(stats)
 
-setwd('C:/Users/edoar/Desktop/NAPDE/Project/Code/SUITHER-calibration/MCMC/Initialize tables')
+setwd('C:/Users/edoar/Desktop/NAPDE/Project/Code/SUITHER-calibration/MCMC/Initialization tables')
 
 remove(list = ls()[1:15])
 Y <- Y[,-1]
