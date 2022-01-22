@@ -1,6 +1,6 @@
 library(stats)
 
-setwd('C:/Users/edoar/Desktop/NAPDE/Project/Code/SUITHER-calibration/MCMC/Initialize tables')
+setwd('C:/Users/edoar/Desktop/NAPDE/Project/Code/SUITHER-calibration/MCMC/Initialization tables')
 
 remove(list = ls()[1:15])
 Y <- Y[,-1]
@@ -15,6 +15,7 @@ TT <- nrow(Y)
 TAB <- array(0,c(7,7,TT))
 TAB[,,1] <- NA
 verify <- vector(mode = 'logical', length = TT)
+
 for (t in 2:TT) {
   
   ### Set constrained values in contingency tables
@@ -52,7 +53,7 @@ for (t in 2:TT) {
         TAB[,,t] <- tab
         # print(paste('Time',t,'ok'))
         good_permutation <- TRUE
-        if(apply(TAB[,,t],1,sum) == Y[t-1,] & apply(TAB[,,t],2,sum) == Y[t,]) verify[t] <- T;
+        if(all(apply(TAB[,,t],1,sum) == Y[t-1,]) & all(apply(TAB[,,t],2,sum) == Y[t,])) verify[t] <- T;
         
       }
       

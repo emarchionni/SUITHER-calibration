@@ -109,7 +109,10 @@ ORmax <- matrix(c(NA, 10^-7, 0.001, 0.0001, 10^-6, NA, 10^-7,
                   7,byrow=TRUE)
 
 ### burnin' and iterations
-burnin <- 200*10^3; R <- 1000*10^3; tinning <- 20
+burnin <- 200*10^3; R <- 1000*10^3; tinning <- 20 #PC
+# TODO : remember number of iteration, burnin, tinnig set
+burnin <- 0.5*10^3; R <- 1*10^3; tinning <- 10 #laptop
+
 
 ### dummies
 dummies <- c(41, 54, 72, 83, 92, 97, 107, 114, 126)
@@ -118,19 +121,21 @@ dummies <- c(41, 54, 72, 83, 92, 97, 107, 114, 126)
 # no ORmax (model 7, Bartolucci et al. 2021)
 # BETTER FOR EXPLORATORY PURPOSES
 out_no_ORmax <- dirmultAR_mcmc(Y[,2:8], 
-                      R = R,
-                      burnin = burnin,
-                      tin = tinning,
+                      R = 1000*10^3,
+                      burnin = 200*10^3,
+                      tin = 20,
                       mra = 50,
                       degree = 3,
-                      tint = dummies)
+                      tint = c(41, 54, 72, 83, 92, 97, 107, 114, 126))
 
 
 
- traceplot(as.mcmc(out_no_ORmax$PPP[4,2,4,]))
+ 
 
 
 save(out_no_ORmax, file = 'model_7.RData')
+
+traceplot(as.mcmc(out_no_ORmax$PPP[4,2,4,]))
 
 
 

@@ -66,14 +66,34 @@ col_filling <- function(TAB, ctot, rtot, j){
       if(rtot[3] + rtot[4] + rtot[6] >= ctot[2]){
         
         
-        temp <- sort(c(rtot[3],rtot[4],rtot[6]))
+        new_rtot <- c(0,0,rtot[3],rtot[4],0,rtot[6],0)
         
-        i <- which(rtot == temp[1])
-        TAB[i,2] <- min(rtot[i],ctot[2]); ctot[2] <- ctot[2] - TAB[i,2]
-        i <- which(rtot == temp[2])
-        TAB[i,2] <- min(rtot[i],ctot[2]); ctot[2] <- ctot[2] - TAB[i,2]
-        i <- which(rtot == temp[3])
-        TAB[i,2] <- min(rtot[i],ctot[2]); ctot[2] <- ctot[2] - TAB[i,2]
+        if(sum(new_rtot)>0){
+          
+          i <- which(new_rtot == max(new_rtot))
+          TAB[i,2] <- min(rtot[i],ctot[2]); ctot[2] <- ctot[2] - TAB[i,2]
+          #browser()
+          new_rtot[i] <- 0
+          
+          if(sum(new_rtot)>0){
+            
+            i <- which(new_rtot == max(new_rtot))
+            TAB[i,2] <- min(rtot[i],ctot[2]); ctot[2] <- ctot[2] - TAB[i,2]
+            new_rtot[i] <- 0
+            
+            if(sum(new_rtot)>0){
+              
+              i <- which(new_rtot == max(new_rtot))
+              TAB[i,2] <- min(rtot[i],ctot[2]); ctot[2] <- ctot[2] - TAB[i,2]
+              
+            }
+            
+          }
+          
+        }
+
+        
+        
         
       } else {
         return(FALSE)
@@ -156,16 +176,32 @@ col_filling <- function(TAB, ctot, rtot, j){
       if(rtot[3] + rtot[4] + rtot[5] >= ctot[4]){
         
         TAB[4,4] <- 0
+        new_rtot <- c(0,0,rtot[3],rtot[4],rtot[5],0,0)
         
-        temp <- sort(c(rtot[3],rtot[4],rtot[5]))
-        
-        i <- which(rtot == temp[1])
-        TAB[i,4] <- min(rtot[i],ctot[4]); ctot[4] <- ctot[4] - TAB[i,4]
-        i <- which(rtot == temp[2])
-        TAB[i,4] <- min(rtot[i],ctot[4]); ctot[4] <- ctot[4] - TAB[i,4]
-        i <- which(rtot == temp[3])
-        TAB[i,4] <- min(rtot[i],ctot[4]); ctot[4] <- ctot[4] - TAB[i,4]
-    
+        if(sum(new_rtot)>0){
+          
+          i <- which(new_rtot == max(new_rtot))
+          TAB[i,4] <- min(new_rtot[i],ctot[4]); ctot[4] <- ctot[4] - TAB[i,4]
+          #browser()
+          new_rtot[i] <- 0
+          
+          if(sum(new_rtot)>0){
+            
+            i <- which(new_rtot == max(new_rtot))
+            TAB[i,4] <- min(new_rtot[i],ctot[4]); ctot[4] <- ctot[4] - TAB[i,4]
+            new_rtot[i] <- 0
+            
+            if(sum(new_rtot)>0){
+              
+              i <- which(rtot == max(new_rtot))
+              TAB[i,4] <- min(new_rtot[i],ctot[4]); ctot[4] <- ctot[4] - TAB[i,4]
+              
+            }
+            
+          }
+          
+        }
+
         TAB[4,4] <- TAB[4,4] + d
         
       } else {
