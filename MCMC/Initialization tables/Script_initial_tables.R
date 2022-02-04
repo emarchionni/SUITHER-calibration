@@ -68,3 +68,12 @@ for (t in 2:TT) {
 save(TAB, file = 'initial_tables.RData')
 
 
+
+
+
+# m_time <- read.table(file = "tab/mean/2.txt")
+# m_time <- format(m_time, scientific = FALSE)
+# up_time <- read.table(file = "tab/upper_bound/2.txt")
+# up_time <- format(up_time, scientific = F)
+# lw_time <- read.table(file = "tab/lower_bound/2.txt")
+# lw_time <- format(lw_time, scientific = F)

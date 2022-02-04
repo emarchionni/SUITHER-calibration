@@ -18,6 +18,38 @@ categories <- c('susceptible',
                 'undetected',
                 'extinct')
 
+
+attach(out_no_ORmax)
+TT <- nrow(Y)
+
+
+### saving plot of INFECTED
+png(filename = 'Infected.png', height = 800, width = 800)
+matplot(Y[,3]+Y[,4]+Y[,5]+Y[,6],
+        type = 'l',
+        lty = c(1),
+        col = 'red',
+        lwd = 2,
+        xlab = 'time',
+        ylab = 'frequencies',
+        main = 'infected people')
+for(time in dummies) abline(v = time, col='grey')
+dev.off()
+
+
+### saving plot of UNDETECTED
+png(filename = 'Undetected.png', height = 800, width = 800)
+matplot(Y[,6],
+        type = 'l',
+        lty = c(1),
+        col = 'red',
+        lwd = 2,
+        xlab = 'time',
+        ylab = 'frequencies',
+        main = 'Undetected people')
+for(time in dummies) abline(v = time, col='grey')
+dev.off()
+
 #### POSTERIOR ESTIMATE p OVER THE DIFFERENT PHASES ####
 
 Ind_const <- rbind(cbind(3,c(2,7)), c(4,2), c(5,4), cbind(6,c(2,3)))
@@ -40,9 +72,7 @@ rownames(Ind_vary) <- names_vary
 dummies <- c(41, 54, 72, 83, 92, 97, 107, 114, 126)
 
 
-attach(out_no_ORmax)
 
-TT <- nrow(Y)
 
 
 PP <- list()
@@ -138,6 +168,52 @@ for(t in 2:TT){
 }
 
 
+
+### plotting
+for (h in 1:nrow(Ind)) {
+  
+  i = Ind[h,1]; j = Ind[h,2]
+  
+  x11()
+  matplot(PPP_mean[i,j,],
+          type = 'l',
+          lty = c(1),
+          col = 'orange',
+          lwd = 2,
+          xlab = 'time',
+          ylab = 'transition probability',
+          main = paste('Probability from', categories[i], 'to', categories[j]))
+  for(time in dummies) abline(v = time, col='grey')
+}
+
+### saving plot form S to U
+png(filename = 'Probability_fromS_toU.png', height = 800, width = 800)
+matplot(PPP_mean[1,6,],
+        type = 'l',
+        lty = c(1),
+        col = 'orange',
+        lwd = 2,
+        xlab = 'time',
+        ylab = 'transition probability',
+        main = 'Probability from S to U')
+for(time in dummies) abline(v = time, col='grey')
+dev.off()
+
+### saving plot form U to I
+png(filename = 'Probability_fromU_toI.png', height = 800, width = 800)
+matplot(PPP_mean[6,3,],
+        type = 'l',
+        lty = c(1),
+        col = 'orange',
+        lwd = 2,
+        xlab = 'time',
+        ylab = 'transition probability',
+        main = 'Probability from U to I')
+for(time in dummies) abline(v = time, col='grey')
+dev.off()
+
+
+
 #### POSTERIOR ESTIMATE CONTINGENCY TABLES ####
 
 
@@ -151,124 +227,291 @@ for(t in 2:TT){
   write.table(upTAB[,,t], paste0("tab/upper_bound/",t,".txt"),row.names = categories, col.names = categories)
 }
 
-View(mTAB[,,40])
-matplot(mTAB[2,2,], type='l')
-View(mTAB[2,2,])
 
-
-
-
-
-
-
-
-###############################################
-
-TAB_flux <- array(0,c(7,7,134))
-Y_new <- Y
-
-for(t in 2:TT){
+for (h in 1:nrow(Ind)){
   
-  for(i in 1:7){
-    
-    for(j in 1:7){
-      
-      TAB_flux[i,j,t] <- floor(Y_new[t-1,i] * PPP_mean[i,j,t])
-      
-    }
-    
-    missing <- Y_new[t-1,i]  - sum(TAB_flux[i,,t])
-    if(missing){
-      
-      if(missing<0){ warning('Value less than 0'); print(t,i,j)}
-      
-      if(i == 1){
-        
-        if(TAB_flux[i,1,t] == 0)
-          col <- 1
-        else if(TAB_flux[i,6,t] == 0)
-          col <- 6
-        else col <- sample(c(1,6), size = 1)
-        
-      } else if(i == 2){
-        
-        col <- 2
-        
-      } else if(i == 3){
-        
-        if(TAB_flux[i,2,t] == 0)
-          col <- 2
-        else if(TAB_flux[i,3,t] == 0)
-          col <- 3
-        else if(TAB_flux[i,4,t] == 0)
-          col <- 4
-        else if(TAB_flux[i,7,t] == 0)
-          col <- 7
-        else col <- sample(c(2,3,4,7), size = 1)
-        
-      } else if(i == 4){
-        
-        if(TAB_flux[i,2,t] == 0)
-          col <- 2
-        else if(TAB_flux[i,4,t] == 0)
-          col <- 4
-        else if(TAB_flux[i,5,t] == 0)
-          col <- 5
-        else col <- sample(c(2,4,5), size = 1)
-        
-      } else if(i == 5){
-        
-        if(TAB_flux[i,4,t] == 0)
-          col <- 4
-        else if(TAB_flux[i,5,t] == 0)
-          col <- 5
-        else if(TAB_flux[i,7,t] == 0)
-          col <- 7
-        else col <- sample(c(4,5,7), size = 1)
-        
-      } else if(i == 6){
-        
-        if(TAB_flux[i,2,t] == 0)
-          col <- 2
-        else if(TAB_flux[i,3,t] == 0)
-          col <- 3
-        else if(TAB_flux[i,6,t] == 0)
-          col <- 6
-        else col <- sample(c(2,3,6), size = 1)
-        
-      } else{
-        
-        col <- 7
-        
-      }
-        
-      
-      TAB_flux[i,col,t] <- TAB_flux[i,col,t] + missing
-    }
-    
-    
-  }
+  i = Ind[h,1]; j = Ind[h,2]
   
-  Y_new[t, ] <- colSums(TAB_flux[,,t])
+  title <- paste("From", categories[i], "to", categories[j])
+  x11()
+  matplot(cbind(mTAB[i,j,], lwTAB[i,j,], upTAB[i,j,]) , 
+          type = 'l',
+          lty = c(1,2,2),
+          col = c('dodgerblue2', 'olivedrab3', 'olivedrab3'),
+          lwd = 1.5,
+          xlab = 'time',
+          ylab = 'counts',
+          main = title)
+
+  
+}
+
+View(Y)
+
+
+
+
+### Recovered
+Ind_red <- Ind[which(Ind[,2]==2),]
+x11()
+par(mfrow=c(3,2))
+matplot(Y$recovered,
+        type = 'l',
+        lty = c(1),
+        col = 'red',
+        lwd = 1.5,
+        xlab = 'time',
+        ylab = 'counts',
+        main = 'Recovered')
+
+for(h in 1:nrow(Ind_red)){
+  
+  
+  i = Ind_red[h,1]; j = Ind_red[h,2]
+  
+  title <- paste("From", categories[i], "to", categories[j]);
+  matplot(cbind(mTAB[i,j,], lwTAB[i,j,], upTAB[i,j,]) , 
+          type = 'l',
+          lty = c(1,2,2),
+          col = c('dodgerblue2', 'olivedrab3', 'olivedrab3'),
+          lwd = 1.5,
+          xlab = 'time',
+          ylab = 'counts',
+          main = title)
+  
+}
+
+
+
+### Isolated
+Ind_red <- Ind[which(Ind[,2]==3),]
+x11()
+par(mfrow=c(2,2))
+matplot(Y$isolated,
+        type = 'l',
+        lty = c(1),
+        col = 'red',
+        lwd = 1.5,
+        xlab = 'time',
+        ylab = 'counts',
+        main = 'Isolated')
+
+
+for(h in 1:nrow(Ind_red)){
+  
+  
+  i = Ind_red[h,1]; j = Ind_red[h,2]
+  
+  title <- paste("From", categories[i], "to", categories[j]);
+  matplot(cbind(mTAB[i,j,], lwTAB[i,j,], upTAB[i,j,]) , 
+          type = 'l',
+          lty = c(1,2,2),
+          col = c('dodgerblue2', 'olivedrab3', 'olivedrab3'),
+          lwd = 1.5,
+          xlab = 'time',
+          ylab = 'counts',
+          main = title)
+  
+}
+
+
+
+### Hospitalized
+Ind_red <- Ind[which(Ind[,2]==4),]
+x11()
+par(mfrow=c(2,2))
+matplot(Y$hospitalized,
+        type = 'l',
+        lty = c(1),
+        col = 'red',
+        lwd = 1.5,
+        xlab = 'time',
+        ylab = 'counts',
+        main = 'Hospitalized')
+
+
+for(h in 1:nrow(Ind_red)){
+  
+  
+  i = Ind_red[h,1]; j = Ind_red[h,2]
+  
+  title <- paste("From", categories[i], "to", categories[j]);
+  matplot(cbind(mTAB[i,j,], lwTAB[i,j,], upTAB[i,j,]) , 
+          type = 'l',
+          lty = c(1,2,2),
+          col = c('dodgerblue2', 'olivedrab3', 'olivedrab3'),
+          lwd = 1.5,
+          xlab = 'time',
+          ylab = 'counts',
+          main = title)
+  
+}
+
+
+### Threatened
+Ind_red <- Ind[which(Ind[,2]==5),]
+x11()
+par(mfrow=c(2,2))
+matplot(Y$threatened,
+        type = 'l',
+        lty = c(1),
+        col = 'red',
+        lwd = 1.5,
+        xlab = 'time',
+        ylab = 'counts',
+        main = 'Threatened')
+
+
+for(h in 1:nrow(Ind_red)){
+  
+  
+  i = Ind_red[h,1]; j = Ind_red[h,2]
+  
+  title <- paste("From", categories[i], "to", categories[j]);
+  matplot(cbind(mTAB[i,j,], lwTAB[i,j,], upTAB[i,j,]) , 
+          type = 'l',
+          lty = c(1,2,2),
+          col = c('dodgerblue2', 'olivedrab3', 'olivedrab3'),
+          lwd = 1.5,
+          xlab = 'time',
+          ylab = 'counts',
+          main = title)
+  
+}
+
+
+### Undetected
+Ind_red <- Ind[which(Ind[,2]==6),]
+x11()
+par(mfrow=c(2,2))
+matplot(Y$undetected,
+        type = 'l',
+        lty = c(1),
+        col = 'red',
+        lwd = 1.5,
+        xlab = 'time',
+        ylab = 'counts',
+        main = 'Undetected')
+
+
+for(h in 1:nrow(Ind_red)){
+  
+  
+  i = Ind_red[h,1]; j = Ind_red[h,2]
+  
+  title <- paste("From", categories[i], "to", categories[j]);
+  matplot(cbind(mTAB[i,j,], lwTAB[i,j,], upTAB[i,j,]) , 
+          type = 'l',
+          lty = c(1,2,2),
+          col = c('dodgerblue2', 'olivedrab3', 'olivedrab3'),
+          lwd = 1.5,
+          xlab = 'time',
+          ylab = 'counts',
+          main = title)
+  
+}
+
+
+### Extinct
+Ind_red <- Ind[which(Ind[,2]==7),]
+x11()
+par(mfrow=c(2,2))
+matplot(Y$extinct,
+        type = 'l',
+        lty = c(1),
+        col = 'red',
+        lwd = 1.5,
+        xlab = 'time',
+        ylab = 'counts',
+        main = 'Extinct')
+
+
+for(h in 1:nrow(Ind_red)){
+  
+  
+  i = Ind_red[h,1]; j = Ind_red[h,2]
+  
+  title <- paste("From", categories[i], "to", categories[j]);
+  matplot(cbind(mTAB[i,j,], lwTAB[i,j,], upTAB[i,j,]) , 
+          type = 'l',
+          lty = c(1,2,2),
+          col = c('dodgerblue2', 'olivedrab3', 'olivedrab3'),
+          lwd = 1.5,
+          xlab = 'time',
+          ylab = 'counts',
+          main = title)
   
 }
 
 
 
 
+### saving plot Isolated
 
-# mm <- c()
-# for (temp in 1:40) {
-#   d <- mean(PPP[i,j,temp,])
-#   mm <- rbind(mm, d)
-# 
-# }
+Ind_red <- Ind[which(Ind[,2]==3),]
+png(filename = 'Isolated.png', height = 800, width = 800)
+#x11(width = 10, height = 10)
+par(mfrow=c(2,2))
+matplot(Y$isolated,
+        type = 'l',
+        lty = c(1),
+        col = 'red',
+        lwd = 2,
+        xlab = 'time',
+        ylab = 'counts',
+        main = 'Isolated')
 
-# write.table(adj,paste0("UserLine/",nameline,"/",nameline,"_", as.character(giorno),".txt"),row.names = FALSE, col.names = TRUE)
+
+for(h in 1:nrow(Ind_red)){
+  
+  
+  i = Ind_red[h,1]; j = Ind_red[h,2]
+  
+  title <- paste("From", categories[i], "to", categories[j]);
+  matplot(mTAB[i,j,], 
+          type = 'l',
+          lty = c(1,2,2),
+          col = c('dodgerblue2', 'olivedrab3', 'olivedrab3'),
+          lwd = 2,
+          xlab = 'time',
+          ylab = 'counts',
+          main = title)
+  
+}
+dev.off()
 
 
-# View(PP)
+
+### saving plot Undetected
+
+Ind_red <- Ind[which(Ind[,2]==6),]
+png(filename = 'Undetected.png', height = 800, width = 800)
+par(mfrow=c(2,2))
+matplot(Y$undetected,
+        type = 'l',
+        lty = c(1),
+        col = 'red',
+        lwd = 2,
+        xlab = 'time',
+        ylab = 'counts',
+        main = 'Undetected')
 
 
-
+for(h in 1:nrow(Ind_red)){
+  
+  
+  i = Ind_red[h,1]; j = Ind_red[h,2]
+  
+  title <- paste("From", categories[i], "to", categories[j]);
+  matplot(mTAB[i,j,], 
+          type = 'l',
+          lty = c(1,2,2),
+          col = c('dodgerblue2', 'olivedrab3', 'olivedrab3'),
+          lwd = 2,
+          xlab = 'time',
+          ylab = 'counts',
+          main = title)
+  
+}
+dev.off()
 

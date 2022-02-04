@@ -1,8 +1,8 @@
 "susceptible" "recovered" "isolated" "hospitalized" "threatened" "undetected" "extinct"
 "susceptible" 56931001 0 0 0 0 10467 0
-"recovered" 0 0 0 0 0 0 0
-"isolated" 0 1435 76285 411 0 0 41
-"hospitalized" 0 93 0 4759 78 0 0
-"threatened" 0 0 0 16 452 0 7
-"undetected" 0 2528 5926 0 0 267839 0
+"recovered" 0 2980878 0 0 0 0 0
+"isolated" 0 775 77133 365 0 0 36
+"hospitalized" 0 37 0 4753 82 0 0
+"threatened" 0 0 0 7 446 0 15
+"undetected" 0 3376 5245 0 0 267839 0
 "extinct" 0 0 0 0 0 0 36205
