@@ -1,6 +1,6 @@
 # SUITHER-calibration
 
-This is the repository for the code used in the project of *Numerical Analysis for Partial Differential Equations* course held by Professor A. Quarteroni at Politecnico di Milano during academic year 2020/2021. The tutors of this work are Professor N. Parolini and Professor L. Dedè. \\
+This is the repository for the code used in the project of *Numerical Analysis for Partial Differential Equations* course held by Professor A. Quarteroni at Politecnico di Milano during academic year 2020/2021. The tutors of this work are Professor N. Parolini and Professor L. Dedè.
     We adapt a Bayesian AR Dirichlet-Multinomial model for COVID-19 data to the scenario of a differential model for modelling epidemic waves (SUITHER model). From one side, this goes in the direction to find a new way to calibrate it. From the other side, it represents in general a good tool for validating results and getting insights about the dynamics of the epidemics, not otherwise inferable through data.
 
 
